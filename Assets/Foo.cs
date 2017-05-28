@@ -78,7 +78,8 @@ public class Foo : MonoBehaviour {
 
 		// Add magic downward velocity if stopped jumping. To make you fall faster than you go up.
 		if (jumpTime <= 0) {
-			rigidBody.velocity = new Vector3 (rigidBody.velocity.x, rigidBody.velocity.y - 0.3f, rigidBody.velocity.z);
+			//rigidBody.velocity = new Vector3 (rigidBody.velocity.x, rigidBody.velocity.y - 0.3f, rigidBody.velocity.z);
+			rigidBody.AddForce(new Vector3(0,1.0f,0));
 		}
 
 
