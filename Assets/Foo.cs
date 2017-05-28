@@ -71,20 +71,13 @@ public class Foo : MonoBehaviour {
 			rigidBody.velocity += jumpVelocity * Time.deltaTime;
 		}
 
-		// Make sure we don't go too fast.
-		/*if (rigidBody.velocity.y > maxJumpVelocity) {
-			rigidBody.velocity = new Vector3 (rigidBody.velocity.x, maxJumpVelocity, rigidBody.velocity.z);
-		}*/
-
 		// Add magic downward velocity if stopped jumping. To make you fall faster than you go up.
 		if (jumpTime <= 0) {
 			//rigidBody.velocity = new Vector3 (rigidBody.velocity.x, rigidBody.velocity.y - 0.3f, rigidBody.velocity.z);
-			rigidBody.AddForce(new Vector3(0,1.0f,0));
+			//rigidBody.AddForce(new Vector3(0,1.0f,0));
 		}
-
-
+			
 		// pass all parameters to the character control script
 		transform.Translate (m_Move, Space.Self);
 	}
 }
-

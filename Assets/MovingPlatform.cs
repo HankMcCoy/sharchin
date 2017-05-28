@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class move : MonoBehaviour {
+public class MovingPlatform : MonoBehaviour {
 	public Vector3 initialDestination = new Vector3(0,0,1.0f);
 	private Vector3 destination;
 	public float period = 3.0f;
@@ -14,7 +14,7 @@ public class move : MonoBehaviour {
 		destination = initialDestination;
 		startPosition = this.transform.localPosition;
 		speed = ((startPosition - destination).magnitude / period) * Time.deltaTime;
-		Debug.Log ("speed: " + speed);
+		//Debug.Log ("speed: " + speed);
 	}
 	
 	// Update is called once per frame
