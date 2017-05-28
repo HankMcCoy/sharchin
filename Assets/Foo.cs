@@ -4,12 +4,19 @@ using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
 public class Foo : MonoBehaviour {
+	public float rotationSpeed = 2.0f;
+	public float movementSpeed = 2.0f;
+	public Vector3 jumpVelocity = new Vector3(0, 7.0f, 0);
+	public float gravity = 1.0f;
+	public float maxJumpTime = 3.0f; // How long maximum jump hold time.
+	public float minJumpTime = 1.0f; // How long maximum jump hold time.
+
+	private float jumpTime = 0.0f; // How long you can still hold jump.
+	private bool jumping = false;
 	private Transform m_Cam;                  // A reference to the main camera in the scenes transform
 	private Vector3 m_CamForward;             // The current forward direction of the camera
 	private Vector3 m_Move;
 	private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
-	public float rotationSpeed = 2.0f;
-	public float jumpPower = 100.0f;
 	private Rigidbody rigidBody;
 
 	private void Start()
@@ -31,12 +38,8 @@ public class Foo : MonoBehaviour {
 
 	private void Update()
 	{
-		if (!m_Jump)
-		{
-			m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
-		}
+		m_Jump = CrossPlatformInputManager.GetButton("Jump");
 	}
-
 
 	// Fixed update is called in sync with physics
 	private void FixedUpdate()
@@ -48,18 +51,38 @@ public class Foo : MonoBehaviour {
 		// calculate camera relative direction to move:
 		transform.Rotate (Vector3.up * rotationSpeed * h * Time.deltaTime);
 
-		//CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
-        //m_Move = v * m_CamForward;
-		m_Move.z = v;
+		// Move forward
+		m_Move.z = v * movementSpeed * Time.deltaTime;
 
+		bool onGround = Physics.Raycast (transform.position, new Vector3 (0, -1.0f, 0), 1.1f);
 
-		Debug.Log (Physics.Raycast (transform.position, new Vector3 (0, -1.0f, 0), 1.0f));
-		if (m_Jump && Physics.Raycast (transform.position, new Vector3 (0, -1.0f, 0), 1.0f)) {
-			rigidBody.AddForce (new Vector3 (0, jumpPower, 0));
-		} 
+		// Jump if on ground.
+		if (m_Jump && onGround) {
+			jumpTime = 0;
+			jumping = true;
+		} else if (jumpTime > minJumpTime && !m_Jump) { // no longer jumping and min jump period is over.
+			jumping = false;
+		} else if (jumpTime > maxJumpTime) {
+			jumping = false;
+		}
+		
+	    if (jumping) {
+			jumpTime += Time.deltaTime;
+			rigidBody.velocity += jumpVelocity * Time.deltaTime;
+		}
+
+		// Make sure we don't go too fast.
+		/*if (rigidBody.velocity.y > maxJumpVelocity) {
+			rigidBody.velocity = new Vector3 (rigidBody.velocity.x, maxJumpVelocity, rigidBody.velocity.z);
+		}*/
+
+		// Add magic downward velocity if stopped jumping. To make you fall faster than you go up.
+		if (jumpTime <= 0) {
+			rigidBody.velocity = new Vector3 (rigidBody.velocity.x, rigidBody.velocity.y - 0.3f, rigidBody.velocity.z);
+		}
+
 
 		// pass all parameters to the character control script
-		m_Jump = false;
 		transform.Translate (m_Move, Space.Self);
 	}
 }
