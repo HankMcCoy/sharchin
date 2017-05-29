@@ -13,13 +13,21 @@ public class Foo : MonoBehaviour {
 
 	private float jumpTime = 0.0f; // How long you can still hold jump.
 	private bool jumping = false;
+    private bool canDoubleJump = true;
+    private bool hasDoubleJumped = false;
 	private Transform m_Cam;                  // A reference to the main camera in the scenes transform
 	private Vector3 m_CamForward;             // The current forward direction of the camera
 	private Vector3 m_Move;
 	private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
 	private Rigidbody rigidBody;
 
-	private void Start()
+    public bool CanDoubleJump
+    {
+        get { return this.canDoubleJump; }
+        set { this.canDoubleJump = value; }
+    }
+
+    private void Start()
 	{
 		rigidBody = GetComponent<Rigidbody> ();
 		// get the transform of the main camera
@@ -56,6 +64,21 @@ public class Foo : MonoBehaviour {
 
 		bool onGround = Physics.Raycast (transform.position, new Vector3 (0, -1.0f, 0), 1.1f);
 
+        if (onGround)
+        {
+            hasDoubleJumped = false;
+            RaycastHit hit;
+            Physics.Raycast(transform.position, new Vector3(0, -1.0f, 0), out hit, 1.1f);
+            if (hit.transform.parent != null)
+            {
+                Transform parent = hit.transform.parent;
+                transform.SetParent(parent);
+            }
+        }else
+        {
+            transform.SetParent(null);
+        }
+
 		// Jump if on ground.
 		if (m_Jump && onGround) {
 			jumpTime = 0;
@@ -66,6 +89,14 @@ public class Foo : MonoBehaviour {
 			jumping = false;
 		}
 		
+        if(canDoubleJump && !hasDoubleJumped && m_Jump  && !jumping)
+        {
+            Debug.Log("double jump");
+            hasDoubleJumped = true;
+            jumping = true;
+            jumpTime = 0;
+        }
+
 	    if (jumping) {
 			jumpTime += Time.deltaTime;
 			rigidBody.velocity += jumpVelocity * Time.deltaTime;
