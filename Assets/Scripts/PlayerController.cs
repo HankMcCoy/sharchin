@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
+/**
+ * Controller for player movement and actions.
+ */
 public class PlayerController : MonoBehaviour {
     public float rotationSpeed = 2.0f;
     public float movementSpeed = 2.0f;

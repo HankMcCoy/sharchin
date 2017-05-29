@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * Controller for moving platforms.
+ */
 public class MovingPlatform : MonoBehaviour {
     public Vector3 initialDestination = new Vector3(0,0,1.0f);
     private Vector3 destination;
