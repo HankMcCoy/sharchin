@@ -53,6 +53,7 @@ public class Foo : MonoBehaviour {
         // calculate camera relative direction to move:
         transform.Rotate (Vector3.up * rotationSpeed * h * Time.deltaTime);
 
+
         // Move forward
         m_Move.z = v * movementSpeed * Time.deltaTime;
 
