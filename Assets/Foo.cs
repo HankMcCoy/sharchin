@@ -23,8 +23,8 @@ public class Foo : MonoBehaviour {
 
     public bool CanDoubleJump
     {
-        get { return this.canDoubleJump; }
-        set { this.canDoubleJump = value; }
+        get { return canDoubleJump; }
+        set { canDoubleJump = value; }
     }
 
     private void Start()
@@ -64,11 +64,11 @@ public class Foo : MonoBehaviour {
 
 		bool onGround = Physics.Raycast (transform.position, new Vector3 (0, -1.0f, 0), 1.1f);
 
-        if (onGround)
+        RaycastHit hit;
+
+        if (onGround && Physics.Raycast(transform.position, new Vector3(0, -1.0f, 0), out hit, 1.1f))
         {
             hasDoubleJumped = false;
-            RaycastHit hit;
-            Physics.Raycast(transform.position, new Vector3(0, -1.0f, 0), out hit, 1.1f);
             if (hit.transform.parent != null)
             {
                 Transform parent = hit.transform.parent;
