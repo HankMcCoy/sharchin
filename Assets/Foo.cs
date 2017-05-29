@@ -12,7 +12,6 @@ public class Foo : MonoBehaviour {
     // How long maximum jump hold time.
     public float minJumpTime = 1.0f;
     // How long maximum jump hold time.
-
     private float jumpTime = 0.0f;
     // How long you can still hold jump.
     private bool jumping = false;
@@ -21,7 +20,7 @@ public class Foo : MonoBehaviour {
     private Vector3 m_CamForward;
     // The current forward direction of the camera
     private Vector3 m_Move;
-    private bool m_Jump;
+    private bool jumpButtonDown;
     // the world-relative desired move direction, calculated from the camForward and user input.
     private Rigidbody rigidBody;
 
@@ -38,7 +37,7 @@ public class Foo : MonoBehaviour {
     }
 
     private void Update () {
-        m_Jump = CrossPlatformInputManager.GetButton ("Jump");
+        jumpButtonDown = CrossPlatformInputManager.GetButton ("Jump");
     }
 
     // Fixed update is called in sync with physics
@@ -48,18 +47,19 @@ public class Foo : MonoBehaviour {
         float v = CrossPlatformInputManager.GetAxis ("Vertical");
 
         // calculate camera relative direction to move:
-        transform.Rotate (Vector3.up * rotationSpeed * h * Time.deltaTime);
-
+        if (h != 0) {
+            transform.Rotate (Vector3.up * rotationSpeed * h * Time.deltaTime);
+        }
         // Move forward
         m_Move.z = v * movementSpeed * Time.deltaTime;
 
         bool onGround = Physics.Raycast (transform.position, new Vector3 (0, -1.0f, 0), 1.1f);
 
         // Jump if on ground.
-        if (m_Jump && onGround) {
+        if (jumpButtonDown && onGround) {
             jumpTime = 0;
             jumping = true;
-        } else if (jumpTime > minJumpTime && !m_Jump) { // no longer jumping and min jump period is over.
+        } else if (jumpTime > minJumpTime && !jumpButtonDown) { // no longer jumping and min jump period is over.
             jumping = false;
         } else if (jumpTime > maxJumpTime) {
             jumping = false;
