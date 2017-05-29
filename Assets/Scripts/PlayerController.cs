@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
-public class Foo : MonoBehaviour {
+public class PlayerController : MonoBehaviour {
     public float rotationSpeed = 2.0f;
     public float movementSpeed = 2.0f;
     public Vector3 jumpVelocity = new Vector3(0, 7.0f, 0);
