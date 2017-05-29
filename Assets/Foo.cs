@@ -21,22 +21,18 @@ public class Foo : MonoBehaviour {
     private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
     private Rigidbody rigidBody;
 
-    public bool CanDoubleJump
-    {
+    public bool CanDoubleJump {
         get { return this.canDoubleJump; }
         set { this.canDoubleJump = value; }
     }
 
-    private void Start()
-    {
+    private void Start() {
         rigidBody = GetComponent<Rigidbody> ();
         // get the transform of the main camera
-        if (Camera.main != null)
-        {
+        if (Camera.main != null) {
             m_Cam = Camera.main.transform;
         }
-        else
-        {
+        else {
             Debug.LogWarning(
                 "Warning: no main camera found. Third person character needs a Camera tagged \"MainCamera\", for camera-relative controls.", gameObject);
             // we use self-relative controls in this case, which probably isn't what the user wants, but hey, we warned them!
@@ -44,14 +40,12 @@ public class Foo : MonoBehaviour {
     }
 
 
-    private void Update()
-    {
+    private void Update() {
         m_Jump = CrossPlatformInputManager.GetButton("Jump");
     }
 
     // Fixed update is called in sync with physics
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         // read inputs
         float h = CrossPlatformInputManager.GetAxis("Horizontal");
         float v = CrossPlatformInputManager.GetAxis("Vertical");
@@ -64,18 +58,15 @@ public class Foo : MonoBehaviour {
 
         bool onGround = Physics.Raycast (transform.position, new Vector3 (0, -1.0f, 0), 1.1f);
 
-        if (onGround)
-        {
+        if (onGround) {
             hasDoubleJumped = false;
             RaycastHit hit;
             Physics.Raycast(transform.position, new Vector3(0, -1.0f, 0), out hit, 1.1f);
-            if (hit.transform.parent != null)
-            {
+            if (hit.transform.parent != null) {
                 Transform parent = hit.transform.parent;
                 transform.SetParent(parent);
             }
-        }else
-        {
+        } else {
             transform.SetParent(null);
         }
 
@@ -89,8 +80,7 @@ public class Foo : MonoBehaviour {
             jumping = false;
         }
 
-        if(canDoubleJump && !hasDoubleJumped && m_Jump  && !jumping)
-        {
+        if(canDoubleJump && !hasDoubleJumped && m_Jump  && !jumping) {
             Debug.Log("double jump");
             hasDoubleJumped = true;
             jumping = true;
