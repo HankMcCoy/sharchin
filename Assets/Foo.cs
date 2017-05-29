@@ -57,7 +57,14 @@ public class Foo : MonoBehaviour {
 		float v = CrossPlatformInputManager.GetAxis("Vertical");
 
 		// calculate camera relative direction to move:
-		transform.Rotate (Vector3.up * rotationSpeed * h * Time.deltaTime);
+        if(h != 0)
+        {
+            transform.Rotate(Vector3.up * rotationSpeed * h * Time.deltaTime);
+        }else
+        {
+            GetComponent<Rigidbody>().freezeRotation = true;
+        }
+
 
 		// Move forward
 		m_Move.z = v * movementSpeed * Time.deltaTime;
