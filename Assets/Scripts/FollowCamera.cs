@@ -26,7 +26,7 @@ public class FollowCamera : MonoBehaviour {
 			if (hit.transform != null)
 			{
                 Renderer rend = hit.transform.GetComponent<Renderer>();
-                Debug.Log(rend.bounds.size.y);
+                //Debug.Log(rend.bounds.size.y);
 				transform.position = new Vector3(transform.position.x, hit.transform.GetComponent<Renderer>().bounds.size.y , transform.position.z);
 			}
         }
