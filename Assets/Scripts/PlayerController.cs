@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour {
             hasDoubleJumped = false;
             RaycastHit hit;
             Physics.Raycast(transform.position, new Vector3(0, -1.0f, 0), out hit, 1.1f);
-            if (hit.transform.parent != null) {
+            if (hit.transform.parent != null && hit.transform.parent != null) {
                 Transform parent = hit.transform.parent;
                 transform.SetParent(parent);
             }
@@ -84,7 +84,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         if(canDoubleJump && !hasDoubleJumped && m_Jump  && !jumping) {
-            Debug.Log("double jump");
+            //Debug.Log("double jump");
             hasDoubleJumped = true;
             jumping = true;
             jumpTime = 0;
