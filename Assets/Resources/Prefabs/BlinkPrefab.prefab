@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33846965278928554}
   - component: {fileID: 136930214203207102}
   - component: {fileID: 23856776861826482}
+  - component: {fileID: 114852527088520950}
   m_Layer: 0
   m_Name: BlinkPrefab
   m_TagString: Untagged
@@ -81,6 +82,19 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1757442817132880}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114852527088520950
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1757442817132880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ee3cf455edba44e78212e853292d0c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alwaysOnGround: 1
+  cameraViewOffset: {x: -0.5, y: 0, z: 10}
 --- !u!136 &136930214203207102
 CapsuleCollider:
   m_ObjectHideFlags: 1

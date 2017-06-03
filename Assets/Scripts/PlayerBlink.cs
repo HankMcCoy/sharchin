@@ -53,7 +53,7 @@ public class PlayerBlink : MonoBehaviour {
                 ResetBlinkPrefab();
 			}else
             {
-                instantiatedBlinkPrefab = Instantiate(blinkPrefab, Vector3.zero, Quaternion.identity);
+                instantiatedBlinkPrefab = Instantiate(blinkPrefab, new Vector3(0,5,0), Quaternion.identity);
                 prefabInstantiated = true;
 				blinkInitiated = true;
             }
