@@ -6,17 +6,20 @@ using UnityStandardAssets.CrossPlatformInput;
 /**
  * Controller for player movement and actions.
  */
-public class PlayerController : MonoBehaviour {
-    public float rotationSpeed = 2.0f;
-    public float movementSpeed = 2.0f;
-    public Vector3 jumpVelocity = new Vector3(0, 7.0f, 0);
-    public float maxJumpTime = 3.0f; // How long maximum jump hold time.
-    public float minJumpTime = 1.0f; // How long maximum jump hold time.
+public class PlayerController : MonoBehaviour
+{
+    public float rotationSpeed = 100.0f;
+    public float movementSpeed = 6.0f;
+    public Vector3 jumpVelocity = new Vector3(0, 60.0f, 0);
+    public float maxJumpTime = 0.10f; // How long maximum jump hold time.
+    public float minJumpTime = 0.05f; // How long maximum jump hold time.
+    public float extraGravity = 0.25f;
 
     private float jumpTime = 0.0f; // How long you can still hold jump.
     private bool jumping = false;
     private bool canDoubleJump = true;
     private bool hasDoubleJumped = false;
+    private bool hasStoppedJumping = false;
     private Transform m_Cam;                  // A reference to the main camera in the scenes transform
     private Vector3 m_CamForward;             // The current forward direction of the camera
     private Vector3 m_Move;
@@ -59,14 +62,15 @@ public class PlayerController : MonoBehaviour {
         // Move forward
         m_Move.z = v * movementSpeed * Time.deltaTime;
 
-        bool onGround = Physics.Raycast (transform.position, new Vector3 (0, -1.0f, 0), 1.1f);
+        RaycastHit groundHit;
+        bool onGround = Physics.Raycast (transform.position, new Vector3 (0, -1.0f, 0), out groundHit, 1.01f);
 
         if (onGround) {
             hasDoubleJumped = false;
-            RaycastHit hit;
-            Physics.Raycast(transform.position, new Vector3(0, -1.0f, 0), out hit, 1.1f);
-            if (hit.transform != null && hit.transform.parent != null) {
-                Transform parent = hit.transform.parent;
+            hasStoppedJumping = false;
+
+            if (groundHit.transform.parent != null) {
+                Transform parent = groundHit.transform.parent;
                 transform.SetParent(parent);
             }
         } else {
@@ -83,8 +87,12 @@ public class PlayerController : MonoBehaviour {
             jumping = false;
         }
 
-        if(canDoubleJump && !hasDoubleJumped && m_Jump  && !jumping) {
-            //Debug.Log("double jump");
+        if (!onGround && !m_Jump) {
+            hasStoppedJumping = true;
+        }
+
+        if(hasStoppedJumping && !hasDoubleJumped && m_Jump && !jumping) {
+            rigidBody.velocity = rigidBody.velocity + new Vector3(0, -rigidBody.velocity.y, 0);
             hasDoubleJumped = true;
             jumping = true;
             jumpTime = 0;
@@ -96,9 +104,8 @@ public class PlayerController : MonoBehaviour {
         }
 
         // Add magic downward velocity if stopped jumping. To make you fall faster than you go up.
-        if (jumpTime <= 0) {
-            //rigidBody.velocity = new Vector3 (rigidBody.velocity.x, rigidBody.velocity.y - 0.3f, rigidBody.velocity.z);
-            //rigidBody.AddForce(new Vector3(0,1.0f,0));
+        if (rigidBody.velocity.y < 0) {
+            rigidBody.velocity = rigidBody.velocity + new Vector3(0f, -extraGravity, 0f);
         }
 
         // pass all parameters to the character control script
