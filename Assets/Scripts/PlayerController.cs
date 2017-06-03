@@ -10,10 +10,10 @@ public class PlayerController : MonoBehaviour
 {
     public float rotationSpeed = 100.0f;
     public float movementSpeed = 6.0f;
-    public Vector3 jumpVelocity = new Vector3(0, 55.0f, 0);
+    public Vector3 jumpVelocity = new Vector3(0, 60.0f, 0);
     public float maxJumpTime = 0.10f; // How long maximum jump hold time.
     public float minJumpTime = 0.05f; // How long maximum jump hold time.
-    public float extraGravity = 0.2f;
+    public float extraGravity = 0.25f;
 
     private float jumpTime = 0.0f; // How long you can still hold jump.
     private bool jumping = false;
