@@ -34,7 +34,6 @@ public class PlayerBlink : MonoBehaviour {
         {
             if (m_Cancel)
             {
-                Destroy(instantiatedBlinkPrefab);
                 ResetBlinkPrefab();
             }
         }
@@ -43,17 +42,17 @@ public class PlayerBlink : MonoBehaviour {
         {
             if (blinkInitiated)
             {
-                Destroy(instantiatedBlinkPrefab);
+                Vector3 destination = new Vector3(instantiatedBlinkPrefab.transform.position.x, instantiatedBlinkPrefab.transform.position.y + 1, instantiatedBlinkPrefab.transform.position.z);
+				ResetBlinkPrefab();
                 if (resetVelocityOnBlink)
                 {
                     rigidBody.velocity = Vector3.zero;
                     rigidBody.angularVelocity = Vector3.zero;
                 }
-				transform.position = instantiatedBlinkPrefab.transform.position;
-                ResetBlinkPrefab();
+                transform.position = destination;
 			}else
             {
-                instantiatedBlinkPrefab = Instantiate(blinkPrefab, new Vector3(0,5,0), Quaternion.identity);
+                instantiatedBlinkPrefab = Instantiate(blinkPrefab, new Vector3(0,transform.position.y + 10,0), Quaternion.identity);
                 prefabInstantiated = true;
 				blinkInitiated = true;
             }
@@ -61,6 +60,7 @@ public class PlayerBlink : MonoBehaviour {
     }
 
     private void ResetBlinkPrefab(){
+		Destroy(instantiatedBlinkPrefab);
 		instantiatedBlinkPrefab = null;
 		prefabInstantiated = false;
 		blinkInitiated = false;
