@@ -6,15 +6,18 @@ using UnityStandardAssets.CrossPlatformInput;
 /**
   * Basic Enemy AI behavior.  In the future we'll have different types of these.
   */
-public class EnemyAi : MonoBehaviour {
+public class EnemyController : MonoBehaviour {
     public GameObject target; // Where the AI will try to go.
     public float aggroDistance = 5.0f;
     public float attackDistance = 1.0f; // How far away the AI can push you.
+    public float damage = 1.0f; // How much damage enemy does.
     public float speed = 1.0f; // In units per second.
     public float attackForce = 400.0f;
+    private PlayerController playerController;
+    private float timeSinceLastProjectileFired = 0.0f;
 
     private void Start() {
-
+		playerController = target.GetComponent<PlayerController>();
     }
 
     private void Update() {
@@ -27,11 +30,28 @@ public class EnemyAi : MonoBehaviour {
             Vector3 newPosition = Vector3.MoveTowards(transform.position, target.transform.position, step);
             newPosition.y = transform.position.y;
             transform.position = newPosition;
+            if (Time.time - timeSinceLastProjectileFired > 1.0f) {
+                fireProjectile();
+                timeSinceLastProjectileFired = Time.time;
+            }
         }
 
         // Punch player if nearbye.
         if (distanceFromTarget < attackDistance) {
-            target.GetComponent<Rigidbody>().AddForce(attackForce * (target.transform.position - transform.position));
+            playerController.damagePlayer(damage);
+            playerController.pushPlayer(attackForce * (target.transform.position - transform.position));
         }
+
+
     }
+
+    void fireProjectile() {
+        // Shoot projectile.
+        GameObject projectile = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), transform.position+transform.forward, Quaternion.identity) as GameObject;
+        projectile.AddComponent<Rigidbody>();
+        projectile.GetComponent<Rigidbody>().useGravity = false;
+        projectile.GetComponent<Rigidbody>().isKinematic = false;
+        projectile.GetComponent<Rigidbody>().AddForce(transform.forward * 500.0f);
+        Destroy(projectile, 3.0f);
+   }
 }
