@@ -6,8 +6,7 @@ using UnityStandardAssets.CrossPlatformInput;
 /**
  * Controller for player movement and actions.
  */
-public class PlayerController : MonoBehaviour
-{
+public class PlayerController : MonoBehaviour {
     public float rotationSpeed = 100.0f;
     public float movementSpeed = 6.0f;
     public Vector3 jumpVelocity = new Vector3(0, 60.0f, 0);
@@ -20,16 +19,27 @@ public class PlayerController : MonoBehaviour
     private bool canDoubleJump = true;
     private bool hasDoubleJumped = false;
     private bool hasStoppedJumping = false;
-    private Transform m_Cam;                  // A reference to the main camera in the scenes transform
-    private Vector3 m_CamForward;             // The current forward direction of the camera
+    private Transform m_Cam; // A reference to the main camera in the scenes transform
+    private Vector3 m_CamForward; // The current forward direction of the camera
     private Vector3 m_Move;
-    private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
+    private bool m_Jump; // the world-relative desired move direction, calculated from the camForward and user input.
     private Rigidbody rigidBody;
+    private PlayerAttributes playerAttributes = new PlayerAttributes();
 
     public bool CanDoubleJump {
         get { return this.canDoubleJump; }
         set { this.canDoubleJump = value; }
     }
+
+    public void damagePlayer(float damage) {
+        // TODO: Add some sort of UI indication for taking damage.
+        playerAttributes.decreaseHealth(damage);
+    }
+
+    public void pushPlayer(Vector3 force) {
+        rigidBody.AddForce(force);
+    }
+
 
     private void Start() {
         rigidBody = GetComponent<Rigidbody> ();

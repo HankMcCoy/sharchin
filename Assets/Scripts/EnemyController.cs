@@ -10,11 +10,13 @@ public class EnemyController : MonoBehaviour {
     public GameObject target; // Where the AI will try to go.
     public float aggroDistance = 5.0f;
     public float attackDistance = 1.0f; // How far away the AI can push you.
+    public float damage = 1.0f; // How much damage enemy does.
     public float speed = 1.0f; // In units per second.
     public float attackForce = 400.0f;
+    private PlayerController playerController;
 
     private void Start() {
-
+        playerController = target.GetComponent<PlayerController>()
     }
 
     private void Update() {
@@ -31,7 +33,8 @@ public class EnemyController : MonoBehaviour {
 
         // Punch player if nearbye.
         if (distanceFromTarget < attackDistance) {
-            target.GetComponent<Rigidbody>().AddForce(attackForce * (target.transform.position - transform.position));
+            playerController.damagePlayer(damage);
+            playerController.pushPlayer(attackForce * (target.transform.position - transform.position));
         }
     }
 }
