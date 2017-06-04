@@ -20,7 +20,7 @@ public class MainCamera : MonoBehaviour
     void LateUpdate()
     {
         horizAngle = player.transform.rotation.eulerAngles.y + 180;
-        vertAngle -= CrossPlatformInputManager.GetAxis("Mouse Y") / 50f;
+        vertAngle += CrossPlatformInputManager.GetAxis("Mouse Y") / 50f;
         float horizAngleRad = horizAngle * Mathf.PI / 180f;
         float y = Mathf.Sin(vertAngle) * distance;
         float xyDist = Mathf.Cos(vertAngle) * distance;
