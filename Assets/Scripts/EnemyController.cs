@@ -14,9 +14,10 @@ public class EnemyController : MonoBehaviour {
     public float speed = 1.0f; // In units per second.
     public float attackForce = 400.0f;
     private PlayerController playerController;
+    private float timeSinceLastProjectileFired = 0.0f;
 
     private void Start() {
-        playerController = target.GetComponent<PlayerController>()
+		playerController = target.GetComponent<PlayerController>();
     }
 
     private void Update() {
@@ -29,6 +30,10 @@ public class EnemyController : MonoBehaviour {
             Vector3 newPosition = Vector3.MoveTowards(transform.position, target.transform.position, step);
             newPosition.y = transform.position.y;
             transform.position = newPosition;
+            if (Time.time - timeSinceLastProjectileFired > 1.0f) {
+                fireProjectile();
+                timeSinceLastProjectileFired = Time.time;
+            }
         }
 
         // Punch player if nearbye.
@@ -36,5 +41,17 @@ public class EnemyController : MonoBehaviour {
             playerController.damagePlayer(damage);
             playerController.pushPlayer(attackForce * (target.transform.position - transform.position));
         }
+
+
     }
+
+    void fireProjectile() {
+        // Shoot projectile.
+        GameObject projectile = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), transform.position+transform.forward, Quaternion.identity) as GameObject;
+        projectile.AddComponent<Rigidbody>();
+        projectile.GetComponent<Rigidbody>().useGravity = false;
+        projectile.GetComponent<Rigidbody>().isKinematic = false;
+        projectile.GetComponent<Rigidbody>().AddForce(transform.forward * 500.0f);
+        Destroy(projectile, 3.0f);
+   }
 }
