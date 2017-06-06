@@ -62,15 +62,15 @@ public class PlayerController : MonoBehaviour {
     // Fixed update is called in sync with physics
     private void FixedUpdate() {
         // read inputs
+        float hRotation = CrossPlatformInputManager.GetAxis("Mouse X");
         float h = CrossPlatformInputManager.GetAxis("Horizontal");
         float v = CrossPlatformInputManager.GetAxis("Vertical");
 
-        // calculate camera relative direction to move:
-        transform.Rotate (Vector3.up * rotationSpeed * h * Time.deltaTime);
+        transform.Rotate (Vector3.up * rotationSpeed * hRotation * Time.deltaTime);
 
 
         // Move forward
-        m_Move.z = v * movementSpeed * Time.deltaTime;
+        m_Move = new Vector3(h, 0, v) * movementSpeed * Time.deltaTime;
 
         RaycastHit groundHit;
         bool onGround = Physics.Raycast (transform.position, new Vector3 (0, -1.0f, 0), out groundHit, 1.01f);
@@ -102,7 +102,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         if(hasStoppedJumping && !hasDoubleJumped && m_Jump && !jumping) {
-            rigidBody.velocity = rigidBody.velocity + new Vector3(0, -rigidBody.velocity.y, 0);
+            rigidBody.velocity += new Vector3(0, -rigidBody.velocity.y, 0);
             hasDoubleJumped = true;
             jumping = true;
             jumpTime = 0;
@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour {
 
         // Add magic downward velocity if stopped jumping. To make you fall faster than you go up.
         if (rigidBody.velocity.y < 0) {
-            rigidBody.velocity = rigidBody.velocity + new Vector3(0f, -extraGravity, 0f);
+            rigidBody.velocity += new Vector3(0f, -extraGravity, 0f);
         }
 
         // pass all parameters to the character control script
