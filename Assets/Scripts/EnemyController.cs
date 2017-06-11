@@ -68,6 +68,10 @@ public class EnemyController : MonoBehaviour {
 
 			health--;
             Destroy(collision.gameObject);
+
+			// Show Explosion
+			GameObject explosion = Instantiate(Resources.Load("Prefabs/Explosion"), transform.position+transform.forward, Quaternion.identity) as GameObject;
+			Destroy(explosion, 1.0f);
         }
     }
 }
