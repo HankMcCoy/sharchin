@@ -15,12 +15,16 @@ public class EnemyController : MonoBehaviour {
     public float attackForce = 400.0f;
     private PlayerController playerController;
     private float timeSinceLastProjectileFired = 0.0f;
+	private int health = 2;
 
     private void Start() {
 		playerController = target.GetComponent<PlayerController>();
     }
 
     private void Update() {
+		if (health <= 0) {
+			Destroy(this.gameObject);
+		}
         float distanceFromTarget = (target.transform.position - transform.position).magnitude;
 
         // If within range, walk towards player (don't change y).
@@ -46,11 +50,24 @@ public class EnemyController : MonoBehaviour {
     void fireProjectile() {
         // Shoot projectile.
         GameObject projectile = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), transform.position+transform.forward, Quaternion.identity) as GameObject;
-		projectile.tag = "damaging";
+		projectile.tag = "player_damaging";
         projectile.AddComponent<Rigidbody>();
         projectile.GetComponent<Rigidbody>().useGravity = false;
         projectile.GetComponent<Rigidbody>().isKinematic = false;
         projectile.GetComponent<Rigidbody>().velocity = transform.forward * 10.0f;
         Destroy(projectile, 3.0f);
    }
+
+	/** Trigger on collision with enemy. */
+    void OnCollisionEnter (Collision collision) {
+		/* Console.log(col.gameObject.tag); */
+        if(collision.gameObject.tag.Equals("enemy_damaging")) {
+			// Calculate Angle Between the collision point and the player
+			Vector3 forceDirection = collision.contacts[0].point - transform.position;
+			forceDirection = -forceDirection.normalized;
+
+			health--;
+            Destroy(collision.gameObject);
+        }
+    }
 }

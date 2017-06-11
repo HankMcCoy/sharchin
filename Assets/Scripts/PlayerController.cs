@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour {
     public float maxJumpTime = 0.10f; // How long maximum jump hold time.
     public float minJumpTime = 0.05f; // How long maximum jump hold time.
     public float extraGravity = 0.25f;
+	public float fireCooldown = 1.0f;
 
     private float jumpTime = 0.0f; // How long you can still hold jump.
     private bool jumping = false;
@@ -23,8 +24,10 @@ public class PlayerController : MonoBehaviour {
     private Vector3 m_CamForward; // The current forward direction of the camera
     private Vector3 m_Move;
     private bool m_Jump; // the world-relative desired move direction, calculated from the camForward and user input.
+    private bool firePressed;
     private Rigidbody rigidBody;
     private PlayerAttributes playerAttributes = new PlayerAttributes();
+	private float nextTimeCanFire = 0.0f;
 
     public bool CanDoubleJump {
         get { return this.canDoubleJump; }
@@ -57,6 +60,7 @@ public class PlayerController : MonoBehaviour {
 
     private void Update() {
         m_Jump = CrossPlatformInputManager.GetButton("Jump");
+		firePressed = CrossPlatformInputManager.GetButton("Fire1");
     }
 
     // Fixed update is called in sync with physics
@@ -68,12 +72,29 @@ public class PlayerController : MonoBehaviour {
         float v = CrossPlatformInputManager.GetAxis("Vertical");
 
 		handleJumping();
+		handleFiring();
 
         // Move forward
         transform.Rotate(Vector3.up * rotationSpeed * vRotation * Time.deltaTime);
         m_Move = new Vector3(h, 0, v) * movementSpeed * Time.deltaTime;
         transform.Translate(m_Move, Space.Self);
     }
+
+	void handleFiring() {
+		if (firePressed && Time.time > nextTimeCanFire) {
+			// Set Firing Cooldown
+			nextTimeCanFire = Time.time + fireCooldown;
+
+			// Shoot projectile.
+			GameObject projectile = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), transform.position+transform.forward, Quaternion.identity) as GameObject;
+			projectile.tag = "enemy_damaging";
+			projectile.AddComponent<Rigidbody>();
+			projectile.GetComponent<Rigidbody>().useGravity = false;
+			projectile.GetComponent<Rigidbody>().isKinematic = false;
+			projectile.GetComponent<Rigidbody>().velocity = transform.forward * 10.0f;
+			Destroy(projectile, 5.0f);
+		}
+	}
 
 	void handleJumping() {
         RaycastHit groundHit;
@@ -126,7 +147,7 @@ public class PlayerController : MonoBehaviour {
 	/** Trigger on collision with player. */
     void OnCollisionEnter (Collision collision) {
 		/* Console.log(col.gameObject.tag); */
-        if(collision.gameObject.tag.Equals("damaging")) {
+        if(collision.gameObject.tag.Equals("player_damaging")) {
 			// Calculate Angle Between the collision point and the player
 			Vector3 forceDirection = collision.contacts[0].point - transform.position;
 			forceDirection = -forceDirection.normalized;
