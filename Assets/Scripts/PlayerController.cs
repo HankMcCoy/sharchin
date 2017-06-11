@@ -62,20 +62,17 @@ public class PlayerController : MonoBehaviour {
     // Fixed update is called in sync with physics
     private void FixedUpdate() {
         // read inputs
-        float hRotation = CrossPlatformInputManager.GetAxis("Mouse X");
+        float hRotation = CrossPlatformInputManager.GetAxis("Joystick X");
+        float vRotation = CrossPlatformInputManager.GetAxis("Joystick Y");
         float h = CrossPlatformInputManager.GetAxis("Horizontal");
         float v = CrossPlatformInputManager.GetAxis("Vertical");
-
-        transform.Rotate (Vector3.up * rotationSpeed * hRotation * Time.deltaTime);
 
 		handleJumping();
 
         // Move forward
+        transform.Rotate(Vector3.up * rotationSpeed * vRotation * Time.deltaTime);
         m_Move = new Vector3(h, 0, v) * movementSpeed * Time.deltaTime;
-
-
-        // pass all parameters to the character control script
-        transform.Translate (m_Move, Space.Self);
+        transform.Translate(m_Move, Space.Self);
     }
 
 	void handleJumping() {
