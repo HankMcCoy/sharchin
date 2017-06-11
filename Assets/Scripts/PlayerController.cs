@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour {
     public float maxJumpTime = 0.10f; // How long maximum jump hold time.
     public float minJumpTime = 0.05f; // How long maximum jump hold time.
     public float extraGravity = 0.25f;
-	public float fireCooldown = 1.0f;
+	public float cooldownFire = 0.3f;
 
     private float jumpTime = 0.0f; // How long you can still hold jump.
     private bool jumping = false;
@@ -83,10 +83,11 @@ public class PlayerController : MonoBehaviour {
 	void handleFiring() {
 		if (firePressed && Time.time > nextTimeCanFire) {
 			// Set Firing Cooldown
-			nextTimeCanFire = Time.time + fireCooldown;
+			nextTimeCanFire = Time.time + cooldownFire;
 
 			// Shoot projectile.
 			GameObject projectile = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), transform.position+transform.forward, Quaternion.identity) as GameObject;
+			projectile.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
 			projectile.tag = "enemy_damaging";
 			projectile.AddComponent<Rigidbody>();
 			projectile.GetComponent<Rigidbody>().useGravity = false;

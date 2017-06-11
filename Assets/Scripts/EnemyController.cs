@@ -15,7 +15,7 @@ public class EnemyController : MonoBehaviour {
     public float attackForce = 400.0f;
     private PlayerController playerController;
     private float timeSinceLastProjectileFired = 0.0f;
-	private int health = 2;
+	private int health = 5;
 
     private void Start() {
 		playerController = target.GetComponent<PlayerController>();
