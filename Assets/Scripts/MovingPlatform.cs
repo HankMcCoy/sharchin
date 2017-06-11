@@ -23,7 +23,6 @@ public class MovingPlatform : MonoBehaviour {
     // Update is called once per frame
     void Update () {
         transform.localPosition = Vector3.MoveTowards(transform.localPosition, destination, speed*Time.deltaTime);
-		Debug.Log(transform.localPosition);
         if(transform.localPosition == destination){
             SwitchDirection ();
         }
