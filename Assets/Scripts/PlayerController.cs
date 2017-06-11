@@ -68,14 +68,21 @@ public class PlayerController : MonoBehaviour {
 
         transform.Rotate (Vector3.up * rotationSpeed * hRotation * Time.deltaTime);
 
+		handleJumping();
 
         // Move forward
         m_Move = new Vector3(h, 0, v) * movementSpeed * Time.deltaTime;
 
+
+        // pass all parameters to the character control script
+        transform.Translate (m_Move, Space.Self);
+    }
+
+	void handleJumping() {
         RaycastHit groundHit;
         bool onGround = Physics.Raycast (transform.position, new Vector3 (0, -1.0f, 0), out groundHit, 1.01f);
 
-        if (onGround) {
+		 if (onGround) {
             hasDoubleJumped = false;
             hasStoppedJumping = false;
 
@@ -117,10 +124,7 @@ public class PlayerController : MonoBehaviour {
         if (rigidBody.velocity.y < 0) {
             rigidBody.velocity += new Vector3(0f, -extraGravity, 0f);
         }
-
-        // pass all parameters to the character control script
-        transform.Translate (m_Move, Space.Self);
-    }
+	}
 
 	/** Trigger on collision with player. */
     void OnCollisionEnter (Collision collision) {
