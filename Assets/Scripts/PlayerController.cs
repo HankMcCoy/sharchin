@@ -121,4 +121,17 @@ public class PlayerController : MonoBehaviour {
         // pass all parameters to the character control script
         transform.Translate (m_Move, Space.Self);
     }
+    void OnCollisionEnter (Collision collision) {
+		/* Console.log(col.gameObject.tag); */
+        if(collision.gameObject.tag.Equals("damaging")) {
+			// Calculate Angle Between the collision point and the player
+			Vector3 forceDirection = collision.contacts[0].point - transform.position;
+			forceDirection = -forceDirection.normalized;
+
+			damagePlayer(3);
+			pushPlayer(forceDirection*1000.0f);
+
+            Destroy(collision.gameObject);
+        }
+    }
 }

@@ -41,13 +41,12 @@ public class EnemyController : MonoBehaviour {
             playerController.damagePlayer(damage);
             playerController.pushPlayer(attackForce * (target.transform.position - transform.position));
         }
-
-
     }
 
     void fireProjectile() {
         // Shoot projectile.
         GameObject projectile = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), transform.position+transform.forward, Quaternion.identity) as GameObject;
+		projectile.tag = "damaging";
         projectile.AddComponent<Rigidbody>();
         projectile.GetComponent<Rigidbody>().useGravity = false;
         projectile.GetComponent<Rigidbody>().isKinematic = false;
