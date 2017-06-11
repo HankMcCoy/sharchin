@@ -50,7 +50,7 @@ public class EnemyController : MonoBehaviour {
         projectile.AddComponent<Rigidbody>();
         projectile.GetComponent<Rigidbody>().useGravity = false;
         projectile.GetComponent<Rigidbody>().isKinematic = false;
-        projectile.GetComponent<Rigidbody>().AddForce(transform.forward * 500.0f);
+        projectile.GetComponent<Rigidbody>().velocity = transform.forward * 10.0f;
         Destroy(projectile, 3.0f);
    }
 }

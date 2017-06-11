@@ -121,6 +121,8 @@ public class PlayerController : MonoBehaviour {
         // pass all parameters to the character control script
         transform.Translate (m_Move, Space.Self);
     }
+
+	/** Trigger on collision with player. */
     void OnCollisionEnter (Collision collision) {
 		/* Console.log(col.gameObject.tag); */
         if(collision.gameObject.tag.Equals("damaging")) {
