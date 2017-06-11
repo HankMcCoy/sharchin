@@ -23,6 +23,8 @@ public class EnemyController : MonoBehaviour {
 
     private void Update() {
 		if (health <= 0) {
+			GameObject deathEffect = Instantiate(Resources.Load("Prefabs/EnemyDeathEffect"), transform.position+transform.forward, Quaternion.identity) as GameObject;
+			Destroy(deathEffect, 1.0f);
 			Destroy(this.gameObject);
 		}
         float distanceFromTarget = (target.transform.position - transform.position).magnitude;
@@ -70,7 +72,8 @@ public class EnemyController : MonoBehaviour {
             Destroy(collision.gameObject);
 
 			// Show Explosion
-			GameObject explosion = Instantiate(Resources.Load("Prefabs/Explosion"), transform.position+transform.forward, Quaternion.identity) as GameObject;
+			GameObject explosion = Instantiate(Resources.Load("Prefabs/EnemyHitEffect"), transform.position+transform.forward, Quaternion.identity) as GameObject;
+			transform.Rotate(-forceDirection);
 			Destroy(explosion, 1.0f);
         }
     }
