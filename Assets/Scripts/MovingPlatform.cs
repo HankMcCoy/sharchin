@@ -17,7 +17,6 @@ public class MovingPlatform : MonoBehaviour {
         destination = initialDestination;
         startPosition = this.transform.localPosition;
         speed = (startPosition - destination).magnitude / period;
-		Debug.Log(speed);
     }
 
     // Update is called once per frame
