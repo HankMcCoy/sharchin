@@ -7,6 +7,7 @@ public class MainCamera : MonoBehaviour {
     float vertAngle = 0.3f;
     Vector3 offset;
     float distance;
+    float lerpSpeed = 0.5f;
 
 	void Start () {
         player = GameObject.Find("Player");
@@ -16,7 +17,6 @@ public class MainCamera : MonoBehaviour {
 	}
 	
 	void LateUpdate () {
-        transform.LookAt(player.transform);
 		horizAngle += CrossPlatformInputManager.GetAxis("Mouse X") / 50f;
 		vertAngle -= CrossPlatformInputManager.GetAxis("Mouse Y") / 50f;
         float y = Mathf.Sin(vertAngle) * distance;
@@ -24,5 +24,6 @@ public class MainCamera : MonoBehaviour {
         float x = Mathf.Sin(horizAngle) * xyDist;
         float z = Mathf.Cos(horizAngle) * xyDist;
         transform.position = player.transform.position + new Vector3(x, y, z);
+		transform.LookAt(player.transform);
 	}
 }
