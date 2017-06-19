@@ -81,6 +81,9 @@ public class PlayerController : MonoBehaviour {
 
         // pass all parameters to the character control script
         transform.Translate (m_Move, Space.Self);
+
+        // Don't let no shit fuck with our rotation.
+        transform.rotation = new Quaternion(0,0,0,1);
     }
 
     void handleFiring() {
