@@ -73,8 +73,8 @@ public class PlayerController : MonoBehaviour {
         float angle = Mathf.Atan2(v, h) * -180 / Mathf.PI + Camera.transform.eulerAngles.y + 90;
         float magnitude = Mathf.Sqrt(h*h + v*v);
 
-        Debug.Log("ANGLE");
-        Debug.Log(angle);
+        //Debug.Log("ANGLE");
+        //Debug.Log(angle);
 
         handleJumping();
         handleFiring();
