@@ -18,6 +18,10 @@ public class EnemyController : MonoBehaviour {
     private int health = 5;
 
     private void Start() {
+        if(target == null){
+            target = GameObject.Find("Player");
+        }
+
         playerController = target.GetComponent<PlayerController>();
     }
 

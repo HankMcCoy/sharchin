@@ -7,8 +7,9 @@ public class PlayerBlink : MonoBehaviour
 {
 
     public bool resetVelocityOnBlink;
-    public Vector3 blinkVelocity = new Vector3(0, 0, 50.0f);
+    public Vector3 initialBlinkVelocity = new Vector3(0, 0, 50.0f);
     public float timeStep = 0.2f;
+    public Camera playerCamera;
 
     private bool CanBlink { get; set; }
     private bool m_Blink, m_Cancel;
@@ -18,6 +19,7 @@ public class PlayerBlink : MonoBehaviour
     private GameObject blinkPrefab;
     private GameObject instantiatedBlinkPrefab;
     private Rigidbody rigidBody;
+    private Vector3 blinkVelocity;
 
     // Use this for initialization
     void Start()
@@ -36,6 +38,8 @@ public class PlayerBlink : MonoBehaviour
 
     private void FixedUpdate()
     {
+        blinkVelocity = initialBlinkVelocity + playerCamera.transform.TransformDirection(playerCamera.transform.forward);
+
         if (blinkInitiated)
         {
             if (m_Cancel)
