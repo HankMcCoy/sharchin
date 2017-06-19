@@ -5,7 +5,7 @@ using UnityEngine;
 /**
  * Controller for moving platforms.
  */
-public class ConveyorBeltController : MonoBehaviour {
+public class VelocityPlatformController : MonoBehaviour {
 	public Vector3 conveyorVelocity;
 
     // Use this for initialization
