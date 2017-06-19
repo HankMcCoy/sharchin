@@ -142,6 +142,7 @@ MonoBehaviour:
   target: {fileID: 0}
   aggroDistance: 10
   attackDistance: 1.5
+  damage: 1
   speed: 5
   attackForce: 400
 --- !u!54 &18300434
@@ -587,6 +588,7 @@ MonoBehaviour:
   target: {fileID: 0}
   aggroDistance: 20
   attackDistance: 3
+  damage: 1
   speed: 5
   attackForce: 900
 --- !u!54 &285458224
@@ -1796,6 +1798,7 @@ MonoBehaviour:
   target: {fileID: 0}
   aggroDistance: 10
   attackDistance: 1.5
+  damage: 1
   speed: 5
   attackForce: 400
 --- !u!54 &997246240
@@ -2085,6 +2088,11 @@ Prefab:
     - target: {fileID: 4512136027584628, guid: c28fe042e4ab8485eb1b836eae56f6d8, type: 2}
       propertyPath: m_RootOrder
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114562620712983506, guid: c28fe042e4ab8485eb1b836eae56f6d8,
+        type: 2}
+      propertyPath: extraGravity
+      value: 0.4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c28fe042e4ab8485eb1b836eae56f6d8, type: 2}

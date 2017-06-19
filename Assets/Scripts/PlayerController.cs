@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour {
     public Vector3 jumpVelocity = new Vector3(0, 60.0f, 0);
     public float maxJumpTime = 0.10f; // How long maximum jump hold time.
     public float minJumpTime = 0.05f; // How long maximum jump hold time.
-    public float extraGravity = 0.25f;
+    public float extraGravity = 0.4f;
     public float cooldownFire = 0.3f;
 
     private float jumpTime = 0.0f; // How long you can still hold jump.
@@ -20,9 +20,10 @@ public class PlayerController : MonoBehaviour {
     private bool canDoubleJump = true;
     private bool hasDoubleJumped = false;
     private bool hasStoppedJumping = false;
+    private Vector3? lastRotation = null;
     private Transform m_Cam; // A reference to the main camera in the scenes transform
     private Vector3 m_CamForward; // The current forward direction of the camera
-    private Vector3 m_Move;
+    private Vector3 m_move;
     private bool m_Jump; // the world-relative desired move direction, calculated from the camForward and user input.
     private bool firePressed;
     private Rigidbody rigidBody;
@@ -66,24 +67,34 @@ public class PlayerController : MonoBehaviour {
     // Fixed update is called in sync with physics
     private void FixedUpdate() {
         // read inputs
-        float hRotation = CrossPlatformInputManager.GetAxis("Mouse X");
+        var Camera = GameObject.Find("Camera");
         float h = CrossPlatformInputManager.GetAxis("Horizontal");
         float v = CrossPlatformInputManager.GetAxis("Vertical");
+        float angle = Mathf.Atan2(v, h) * -180 / Mathf.PI + Camera.transform.eulerAngles.y + 90;
+        float magnitude = Mathf.Sqrt(h*h + v*v);
+
+        Debug.Log("ANGLE");
+        Debug.Log(angle);
 
         handleJumping();
         handleFiring();
 
-        transform.Rotate (Vector3.up * rotationSpeed * hRotation * Time.deltaTime);
+        if (magnitude > 0.1) {
+            transform.eulerAngles = new Vector3(0f, angle, 0f);
+            lastRotation = null;
+        } else if (!lastRotation.HasValue) {
+            lastRotation = transform.eulerAngles;
+        } else {
+            // If the user isn't actively setting the rotation, keep it locked to whatever it was last
+            // to avoid getting spun around by stuff that hits us.
+            transform.eulerAngles = lastRotation.Value;
+        }
 
         // Move forward
-        m_Move = new Vector3(h, 0, v) * movementSpeed * Time.deltaTime;
-
+        m_move = new Vector3(0, 0, 1) * movementSpeed * magnitude * Time.deltaTime;
 
         // pass all parameters to the character control script
-        transform.Translate (m_Move, Space.Self);
-
-        // Don't let no shit fuck with our rotation.
-        transform.rotation = new Quaternion(0,0,0,1);
+        transform.Translate (m_move, Space.Self);
     }
 
     void handleFiring() {
