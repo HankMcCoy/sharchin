@@ -15,18 +15,18 @@ public class PlayerBlink : MonoBehaviour {
     private GameObject instantiatedBlinkPrefab;
     private Rigidbody rigidBody;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         CanBlink = true;
         blinkPrefab = (GameObject)Resources.Load("Prefabs/BlinkPrefab");
         rigidBody = GetComponent<Rigidbody>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		m_Blink = CrossPlatformInputManager.GetButtonDown("Blink");
+    }
+
+    // Update is called once per frame
+    void Update () {
+        m_Blink = CrossPlatformInputManager.GetButtonDown("Blink");
         m_Cancel = CrossPlatformInputManager.GetButtonDown("Cancel");
-	}
+    }
 
     private void FixedUpdate()
     {
@@ -43,26 +43,26 @@ public class PlayerBlink : MonoBehaviour {
             if (blinkInitiated)
             {
                 Vector3 destination = new Vector3(instantiatedBlinkPrefab.transform.position.x, instantiatedBlinkPrefab.transform.position.y + 1, instantiatedBlinkPrefab.transform.position.z);
-				ResetBlinkPrefab();
+                ResetBlinkPrefab();
                 if (resetVelocityOnBlink)
                 {
                     rigidBody.velocity = Vector3.zero;
                     rigidBody.angularVelocity = Vector3.zero;
                 }
                 transform.position = destination;
-			}else
+            }else
             {
                 instantiatedBlinkPrefab = Instantiate(blinkPrefab, new Vector3(0,transform.position.y + 10,0), Quaternion.identity);
                 prefabInstantiated = true;
-				blinkInitiated = true;
+                blinkInitiated = true;
             }
         }
     }
 
     private void ResetBlinkPrefab(){
-		Destroy(instantiatedBlinkPrefab);
-		instantiatedBlinkPrefab = null;
-		prefabInstantiated = false;
-		blinkInitiated = false;
+        Destroy(instantiatedBlinkPrefab);
+        instantiatedBlinkPrefab = null;
+        prefabInstantiated = false;
+        blinkInitiated = false;
     }
 }

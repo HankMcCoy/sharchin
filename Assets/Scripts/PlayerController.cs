@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour {
     public float maxJumpTime = 0.10f; // How long maximum jump hold time.
     public float minJumpTime = 0.05f; // How long maximum jump hold time.
     public float extraGravity = 0.25f;
-	public float cooldownFire = 0.3f;
+    public float cooldownFire = 0.3f;
 
     private float jumpTime = 0.0f; // How long you can still hold jump.
     private bool jumping = false;
@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour {
     private bool firePressed;
     private Rigidbody rigidBody;
     private PlayerAttributes playerAttributes = new PlayerAttributes();
-	private float nextTimeCanFire = 0.0f;
+    private float nextTimeCanFire = 0.0f;
 
     public bool CanDoubleJump {
         get { return this.canDoubleJump; }
@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour {
 
     private void Update() {
         m_Jump = CrossPlatformInputManager.GetButton("Jump");
-		firePressed = CrossPlatformInputManager.GetButton("Fire1");
+        firePressed = CrossPlatformInputManager.GetButton("Fire1");
     }
 
     // Fixed update is called in sync with physics
@@ -71,8 +71,8 @@ public class PlayerController : MonoBehaviour {
         float h = CrossPlatformInputManager.GetAxis("Horizontal");
         float v = CrossPlatformInputManager.GetAxis("Vertical");
 
-		handleJumping();
-		handleFiring();
+        handleJumping();
+        handleFiring();
 
         // Move forward
         transform.Rotate(Vector3.up * rotationSpeed * vRotation * Time.deltaTime);
@@ -80,28 +80,28 @@ public class PlayerController : MonoBehaviour {
         transform.Translate(m_Move, Space.Self);
     }
 
-	void handleFiring() {
-		if (firePressed && Time.time > nextTimeCanFire) {
-			// Set Firing Cooldown
-			nextTimeCanFire = Time.time + cooldownFire;
+    void handleFiring() {
+        if (firePressed && Time.time > nextTimeCanFire) {
+            // Set Firing Cooldown
+            nextTimeCanFire = Time.time + cooldownFire;
 
-			// Shoot projectile.
-			GameObject projectile = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), transform.position+transform.forward, Quaternion.identity) as GameObject;
-			projectile.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
-			projectile.tag = "enemy_damaging";
-			projectile.AddComponent<Rigidbody>();
-			projectile.GetComponent<Rigidbody>().useGravity = false;
-			projectile.GetComponent<Rigidbody>().isKinematic = false;
-			projectile.GetComponent<Rigidbody>().velocity = transform.forward * 10.0f;
-			Destroy(projectile, 5.0f);
-		}
-	}
+            // Shoot projectile.
+            GameObject projectile = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), transform.position+transform.forward, Quaternion.identity) as GameObject;
+            projectile.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+            projectile.tag = "enemy_damaging";
+            projectile.AddComponent<Rigidbody>();
+            projectile.GetComponent<Rigidbody>().useGravity = false;
+            projectile.GetComponent<Rigidbody>().isKinematic = false;
+            projectile.GetComponent<Rigidbody>().velocity = transform.forward * 10.0f;
+            Destroy(projectile, 5.0f);
+        }
+    }
 
-	void handleJumping() {
+    void handleJumping() {
         RaycastHit groundHit;
         bool onGround = Physics.Raycast (transform.position, new Vector3 (0, -1.0f, 0), out groundHit, 1.01f);
 
-		 if (onGround) {
+         if (onGround) {
             hasDoubleJumped = false;
             hasStoppedJumping = false;
 
@@ -143,18 +143,18 @@ public class PlayerController : MonoBehaviour {
         if (rigidBody.velocity.y < 0) {
             rigidBody.velocity += new Vector3(0f, -extraGravity, 0f);
         }
-	}
+    }
 
-	/** Trigger on collision with player. */
+    /** Trigger on collision with player. */
     void OnCollisionEnter (Collision collision) {
-		/* Console.log(col.gameObject.tag); */
+        /* Console.log(col.gameObject.tag); */
         if(collision.gameObject.tag.Equals("player_damaging")) {
-			// Calculate Angle Between the collision point and the player
-			Vector3 forceDirection = collision.contacts[0].point - transform.position;
-			forceDirection = -forceDirection.normalized;
+            // Calculate Angle Between the collision point and the player
+            Vector3 forceDirection = collision.contacts[0].point - transform.position;
+            forceDirection = -forceDirection.normalized;
 
-			damagePlayer(3);
-			pushPlayer(forceDirection*1000.0f);
+            damagePlayer(3);
+            pushPlayer(forceDirection*1000.0f);
 
             Destroy(collision.gameObject);
         }

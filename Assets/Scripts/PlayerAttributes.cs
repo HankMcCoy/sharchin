@@ -26,12 +26,12 @@ public class PlayerAttributes : MonoBehaviour {
         currentHealth += healthDelta;
     }
 
-	void Start () {
+    void Start () {
         currentHealth = maxHealth;
-	}
+    }
 
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update () {
 
-	}
+    }
 }
