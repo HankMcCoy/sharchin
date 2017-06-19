@@ -6,30 +6,43 @@ using UnityStandardAssets.CrossPlatformInput;
 /**
  * Controller for player movement and actions.
  */
-public class PlayerController : MonoBehaviour
-{
+public class PlayerController : MonoBehaviour {
     public float rotationSpeed = 100.0f;
     public float movementSpeed = 6.0f;
     public Vector3 jumpVelocity = new Vector3(0, 60.0f, 0);
     public float maxJumpTime = 0.10f; // How long maximum jump hold time.
     public float minJumpTime = 0.05f; // How long maximum jump hold time.
     public float extraGravity = 0.25f;
+    public float cooldownFire = 0.3f;
 
     private float jumpTime = 0.0f; // How long you can still hold jump.
     private bool jumping = false;
     private bool canDoubleJump = true;
     private bool hasDoubleJumped = false;
     private bool hasStoppedJumping = false;
-    private Transform m_Cam;                  // A reference to the main camera in the scenes transform
-    private Vector3 m_CamForward;             // The current forward direction of the camera
+    private Transform m_Cam; // A reference to the main camera in the scenes transform
+    private Vector3 m_CamForward; // The current forward direction of the camera
     private Vector3 m_Move;
-    private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
+    private bool m_Jump; // the world-relative desired move direction, calculated from the camForward and user input.
+    private bool firePressed;
     private Rigidbody rigidBody;
+    private PlayerAttributes playerAttributes = new PlayerAttributes();
+    private float nextTimeCanFire = 0.0f;
 
     public bool CanDoubleJump {
         get { return this.canDoubleJump; }
         set { this.canDoubleJump = value; }
     }
+
+    public void damagePlayer(float damage) {
+        // TODO: Add some sort of UI indication for taking damage.
+        playerAttributes.decreaseHealth(damage);
+    }
+
+    public void pushPlayer(Vector3 force) {
+        rigidBody.AddForce(force);
+    }
+
 
     private void Start() {
         rigidBody = GetComponent<Rigidbody> ();
@@ -47,25 +60,51 @@ public class PlayerController : MonoBehaviour
 
     private void Update() {
         m_Jump = CrossPlatformInputManager.GetButton("Jump");
+        firePressed = CrossPlatformInputManager.GetButton("Fire1");
     }
 
     // Fixed update is called in sync with physics
     private void FixedUpdate() {
         // read inputs
+        float hRotation = CrossPlatformInputManager.GetAxis("Mouse X");
         float h = CrossPlatformInputManager.GetAxis("Horizontal");
         float v = CrossPlatformInputManager.GetAxis("Vertical");
 
-        // calculate camera relative direction to move:
-        transform.Rotate (Vector3.up * rotationSpeed * h * Time.deltaTime);
+        handleJumping();
+        handleFiring();
 
+        transform.Rotate (Vector3.up * rotationSpeed * hRotation * Time.deltaTime);
 
         // Move forward
-        m_Move.z = v * movementSpeed * Time.deltaTime;
+        m_Move = new Vector3(h, 0, v) * movementSpeed * Time.deltaTime;
 
+
+        // pass all parameters to the character control script
+        transform.Translate (m_Move, Space.Self);
+    }
+
+    void handleFiring() {
+        if (firePressed && Time.time > nextTimeCanFire) {
+            // Set Firing Cooldown
+            nextTimeCanFire = Time.time + cooldownFire;
+
+            // Shoot projectile.
+            GameObject projectile = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), transform.position+transform.forward, Quaternion.identity) as GameObject;
+            projectile.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+            projectile.tag = "enemy_damaging";
+            projectile.AddComponent<Rigidbody>();
+            projectile.GetComponent<Rigidbody>().useGravity = false;
+            projectile.GetComponent<Rigidbody>().isKinematic = false;
+            projectile.GetComponent<Rigidbody>().velocity = transform.forward * 10.0f;
+            Destroy(projectile, 5.0f);
+        }
+    }
+
+    void handleJumping() {
         RaycastHit groundHit;
         bool onGround = Physics.Raycast (transform.position, new Vector3 (0, -1.0f, 0), out groundHit, 1.01f);
 
-        if (onGround) {
+         if (onGround) {
             hasDoubleJumped = false;
             hasStoppedJumping = false;
 
@@ -92,7 +131,7 @@ public class PlayerController : MonoBehaviour
         }
 
         if(hasStoppedJumping && !hasDoubleJumped && m_Jump && !jumping) {
-            rigidBody.velocity = rigidBody.velocity + new Vector3(0, -rigidBody.velocity.y, 0);
+            rigidBody.velocity += new Vector3(0, -rigidBody.velocity.y, 0);
             hasDoubleJumped = true;
             jumping = true;
             jumpTime = 0;
@@ -105,10 +144,22 @@ public class PlayerController : MonoBehaviour
 
         // Add magic downward velocity if stopped jumping. To make you fall faster than you go up.
         if (rigidBody.velocity.y < 0) {
-            rigidBody.velocity = rigidBody.velocity + new Vector3(0f, -extraGravity, 0f);
+            rigidBody.velocity += new Vector3(0f, -extraGravity, 0f);
         }
+    }
 
-        // pass all parameters to the character control script
-        transform.Translate (m_Move, Space.Self);
+    /** Trigger on collision with player. */
+    void OnCollisionEnter (Collision collision) {
+        /* Console.log(col.gameObject.tag); */
+        if(collision.gameObject.tag.Equals("player_damaging")) {
+            // Calculate Angle Between the collision point and the player
+            Vector3 forceDirection = collision.contacts[0].point - transform.position;
+            forceDirection = -forceDirection.normalized;
+
+            damagePlayer(3);
+            pushPlayer(forceDirection*1000.0f);
+
+            Destroy(collision.gameObject);
+        }
     }
 }

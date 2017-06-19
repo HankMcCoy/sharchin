@@ -20,16 +20,24 @@ public class PlayerBlink : MonoBehaviour
     private Rigidbody rigidBody;
 
     // Use this for initialization
+<<<<<<< HEAD
     void Start()
     {
+=======
+    void Start () {
+>>>>>>> master
         CanBlink = true;
         blinkPrefab = (GameObject)Resources.Load("Prefabs/BlinkPrefab");
         rigidBody = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
+<<<<<<< HEAD
     void Update()
     {
+=======
+    void Update () {
+>>>>>>> master
         m_Blink = CrossPlatformInputManager.GetButtonDown("Blink");
         m_Cancel = CrossPlatformInputManager.GetButtonDown("Cancel");
     }
@@ -58,8 +66,12 @@ public class PlayerBlink : MonoBehaviour
                     rigidBody.angularVelocity = Vector3.zero;
                 }
                 transform.position = destination;
+<<<<<<< HEAD
             }
             else
+=======
+            }else
+>>>>>>> master
             {
                 instantiatedBlinkPrefab = Instantiate(blinkPrefab, new Vector3(0, transform.position.y + 10, 0), Quaternion.identity);
                 prefabInstantiated = true;
@@ -68,8 +80,12 @@ public class PlayerBlink : MonoBehaviour
         }
     }
 
+<<<<<<< HEAD
     private void ResetBlinkPrefab()
     {
+=======
+    private void ResetBlinkPrefab(){
+>>>>>>> master
         Destroy(instantiatedBlinkPrefab);
         instantiatedBlinkPrefab = null;
         prefabInstantiated = false;

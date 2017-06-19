@@ -9,18 +9,18 @@ public class UITimer : MonoBehaviour {
     private float currentTime;
     private Image uiImage;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         uiImage = GetComponent<Image>();
         currentTime = totalTime;
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    void Update () {
         currentTime -= Time.deltaTime;
         uiImage.fillAmount = currentTime / totalTime;
         DetermineUIColor();
-	}
+    }
 
     private void DetermineUIColor(){
         float percentage = currentTime / totalTime;

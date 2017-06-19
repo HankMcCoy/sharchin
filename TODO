@@ -1,0 +1,2 @@
+NOTE: Windows, Mac, and Linux all have different button values for the Xbox controller, as seen on the Wiki page. To make the process of switching between these platforms easy, the InputManager.asset file found in the Project Settings folder in your Unity project folder stores your input settings. If you create a separate InputManager.asset file for each platform, and store them in another folder, you can switch them in and out by replacing the file in your Unity project folder with the one for the desired platform.
+[ ] - Fix stuff
