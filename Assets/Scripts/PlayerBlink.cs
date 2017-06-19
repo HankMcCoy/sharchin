@@ -38,7 +38,11 @@ public class PlayerBlink : MonoBehaviour
 
     private void FixedUpdate()
     {
-        blinkVelocity = initialBlinkVelocity + playerCamera.transform.TransformDirection(playerCamera.transform.forward);
+        //blinkVelocity = initialBlinkVelocity + playerCamera.transform.InverseTransformDirection(playerCamera.transform.forward);
+
+        blinkVelocity = transform.forward * 10;
+
+        blinkVelocity.y += playerCamera.transform.forward.y * 5;
 
         if (blinkInitiated)
         {
