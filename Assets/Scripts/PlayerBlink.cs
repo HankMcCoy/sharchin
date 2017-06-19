@@ -21,6 +21,7 @@ public class PlayerBlink : MonoBehaviour
     private Rigidbody rigidBody;
     private Vector3 blinkVelocity;
 
+<<<<<<< HEAD
     // Use this for initialization
     void Start()
     {
@@ -33,9 +34,22 @@ public class PlayerBlink : MonoBehaviour
     void Update()
     {
         m_Blink = CrossPlatformInputManager.GetButtonDown("Blink");
-        m_Cancel = CrossPlatformInputManager.GetButtonDown("Cancel");
-    }
+=======
 
+	// Use this for initialization
+	void Start () {
+        CanBlink = true;
+        blinkPrefab = (GameObject)Resources.Load("Prefabs/BlinkPrefab");
+        rigidBody = GetComponent<Rigidbody>();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		m_Blink = CrossPlatformInputManager.GetButtonDown("Blink");
+>>>>>>> refs/remotes/origin/master
+        m_Cancel = CrossPlatformInputManager.GetButtonDown("Cancel");
+
+<<<<<<< HEAD
     private void FixedUpdate()
     {
         //blinkVelocity = initialBlinkVelocity + playerCamera.transform.InverseTransformDirection(playerCamera.transform.forward);
@@ -44,6 +58,8 @@ public class PlayerBlink : MonoBehaviour
 
         blinkVelocity.y += playerCamera.transform.forward.y * 5;
 
+=======
+>>>>>>> refs/remotes/origin/master
         if (blinkInitiated)
         {
             if (m_Cancel)
@@ -58,30 +74,41 @@ public class PlayerBlink : MonoBehaviour
         {
             if (blinkInitiated)
             {
-                Vector3 destination = new Vector3(instantiatedBlinkPrefab.transform.position.x, instantiatedBlinkPrefab.transform.position.y + 1, instantiatedBlinkPrefab.transform.position.z);
-                ResetBlinkPrefab();
+                Vector3 destination =  instantiatedBlinkPrefab.transform.position + new Vector3(0, 1, 0);
+				ResetBlinkPrefab();
                 if (resetVelocityOnBlink)
                 {
                     rigidBody.velocity = Vector3.zero;
                     rigidBody.angularVelocity = Vector3.zero;
                 }
                 transform.position = destination;
+<<<<<<< HEAD
             }
             else
+=======
+			}else
+>>>>>>> refs/remotes/origin/master
             {
                 instantiatedBlinkPrefab = Instantiate(blinkPrefab, new Vector3(0, transform.position.y + 10, 0), Quaternion.identity);
                 prefabInstantiated = true;
-                blinkInitiated = true;
+				blinkInitiated = true;
             }
         }
     }
 
     private void ResetBlinkPrefab(){
+<<<<<<< HEAD
 
         Destroy(instantiatedBlinkPrefab);
         instantiatedBlinkPrefab = null;
         prefabInstantiated = false;
         blinkInitiated = false;
+=======
+		Destroy(instantiatedBlinkPrefab);
+		instantiatedBlinkPrefab = null;
+		prefabInstantiated = false;
+		blinkInitiated = false;
+>>>>>>> refs/remotes/origin/master
     }
 
 	public void PlotTrajectory(Vector3 start, Vector3 startVelocity, float timestep, float maxTime)
