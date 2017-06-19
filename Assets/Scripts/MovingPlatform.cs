@@ -16,12 +16,12 @@ public class MovingPlatform : MonoBehaviour {
     void Start () {
         destination = initialDestination;
         startPosition = this.transform.localPosition;
-        speed = ((startPosition - destination).magnitude / period);
+        speed = (startPosition - destination).magnitude / period;
     }
 
     // Update is called once per frame
     void Update () {
-        transform.localPosition = Vector3.MoveTowards (transform.localPosition, destination, speed);
+        transform.localPosition = Vector3.MoveTowards(transform.localPosition, destination, speed*Time.deltaTime);
         if(transform.localPosition == destination){
             SwitchDirection ();
         }
