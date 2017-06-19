@@ -15,6 +15,7 @@ public class PlayerBlink : MonoBehaviour {
     private GameObject instantiatedBlinkPrefab;
     private Rigidbody rigidBody;
 
+
 	// Use this for initialization
 	void Start () {
         CanBlink = true;
@@ -26,10 +27,7 @@ public class PlayerBlink : MonoBehaviour {
 	void Update () {
 		m_Blink = CrossPlatformInputManager.GetButtonDown("Blink");
         m_Cancel = CrossPlatformInputManager.GetButtonDown("Cancel");
-	}
 
-    private void FixedUpdate()
-    {
         if (blinkInitiated)
         {
             if (m_Cancel)
@@ -42,7 +40,7 @@ public class PlayerBlink : MonoBehaviour {
         {
             if (blinkInitiated)
             {
-                Vector3 destination = new Vector3(instantiatedBlinkPrefab.transform.position.x, instantiatedBlinkPrefab.transform.position.y + 1, instantiatedBlinkPrefab.transform.position.z);
+                Vector3 destination =  instantiatedBlinkPrefab.transform.position + new Vector3(0, 1, 0);
 				ResetBlinkPrefab();
                 if (resetVelocityOnBlink)
                 {
