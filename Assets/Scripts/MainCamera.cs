@@ -23,8 +23,9 @@ public class MainCamera : MonoBehaviour {
         float xyDist = Mathf.Cos(vertAngle) * distance;
         float x = Mathf.Sin(horizAngle) * xyDist;
         float z = Mathf.Cos(horizAngle) * xyDist;
+        y = Mathf.Clamp(y, -0.5f, 4.0f);
         transform.position = player.transform.position + new Vector3(x, y, z);
-        Vector3 directionToLook = new Vector3(player.transform.position.x, player.transform.position.y + 0.75f, player.transform.position.z);
+        Vector3 directionToLook = new Vector3(player.transform.position.x, player.transform.position.y + 0.95f, player.transform.position.z);
 		transform.LookAt(directionToLook);
 	}
 }

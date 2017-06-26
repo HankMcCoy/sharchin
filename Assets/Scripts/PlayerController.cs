@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour {
     private Rigidbody rigidBody;
     private PlayerAttributes playerAttributes = new PlayerAttributes();
     private float nextTimeCanFire = 0.0f;
+    private int numberSpawned;
 
     public bool CanDoubleJump {
         get { return this.canDoubleJump; }
@@ -103,6 +104,7 @@ public class PlayerController : MonoBehaviour {
             nextTimeCanFire = Time.time + cooldownFire;
 
             // Shoot projectile.
+            Debug.Log("Spawning #: " + numberSpawned);
             GameObject projectile = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), transform.position+transform.forward, Quaternion.identity) as GameObject;
             projectile.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
             projectile.tag = "enemy_damaging";
@@ -111,6 +113,7 @@ public class PlayerController : MonoBehaviour {
             projectile.GetComponent<Rigidbody>().isKinematic = false;
             projectile.GetComponent<Rigidbody>().velocity = transform.forward * 10.0f;
             Destroy(projectile, 5.0f);
+            numberSpawned += 1;
         }
     }
 

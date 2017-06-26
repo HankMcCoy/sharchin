@@ -22,6 +22,7 @@ public class PlayerBlink : MonoBehaviour
     private Rigidbody rigidBody;
     private Vector3 blinkVelocity;
     private LineRenderer lineRenderer;
+    float vertAngle = 0.3f;
 
     // Use this for initialization
     void Start()
@@ -32,17 +33,19 @@ public class PlayerBlink : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
     }
 
-	// Update is called once per frame
-	void Update () {
-            m_Blink = CrossPlatformInputManager.GetButtonDown("Blink");
-            m_Cancel = CrossPlatformInputManager.GetButtonDown("Cancel");
-        }
-
-    private void FixedUpdate()
+    public void InvertLook()
     {
-        blinkVelocity = playerCamera.transform.forward * initialBlinkVelocity;
+        lookSensitivity *= -1;
+    }
 
-        blinkVelocity.y = -playerCamera.transform.forward.y * lookSensitivity;
+    private void Update()
+    {
+        m_Blink = CrossPlatformInputManager.GetButtonDown("Blink");
+        m_Cancel = CrossPlatformInputManager.GetButtonDown("Cancel");
+        vertAngle -= CrossPlatformInputManager.GetAxis("Mouse Y") / 10f;
+
+        blinkVelocity = playerCamera.transform.forward * initialBlinkVelocity;
+        blinkVelocity.y = Mathf.Sin(vertAngle) * lookSensitivity;
 
         if (blinkInitiated)
         {
@@ -53,7 +56,6 @@ public class PlayerBlink : MonoBehaviour
                 PlotTrajectory(transform.position, blinkVelocity, timeStep, 5f);
             }
         }
-
         if (m_Blink)
         {
             if (blinkInitiated)
@@ -117,13 +119,12 @@ public class PlayerBlink : MonoBehaviour
                 }
                 break;
             }
-			Debug.DrawLine(prev, pos, Color.red);
 			prev = pos;
 		}
 	}
 
 	public Vector3 PlotTrajectoryAtTime(Vector3 start, Vector3 startVelocity, float time)
 	{
-		return start + startVelocity * time + Physics.gravity * time * time * 0.5f;
+        return start + startVelocity * time + Physics.gravity * time * time * 0.5f;
 	}
 }
