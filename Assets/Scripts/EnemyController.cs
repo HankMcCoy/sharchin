@@ -15,7 +15,8 @@ public class EnemyController : MonoBehaviour {
     public float attackForce = 400.0f;
     private PlayerController playerController;
     private float timeSinceLastProjectileFired = 0.0f;
-    private int health = 5;
+    public int health = 5;
+    private int startingHealth = health;
 
     private void Start() {
         playerController = target.GetComponent<PlayerController>();
@@ -30,7 +31,7 @@ public class EnemyController : MonoBehaviour {
         float distanceFromTarget = (target.transform.position - transform.position).magnitude;
 
         // If within range, walk towards player (don't change y).
-        if (distanceFromTarget < aggroDistance) {
+        if (distanceFromTarget < aggroDistance || health < startingHealth) {
             transform.LookAt(target.transform);
             float step = speed * Time.deltaTime;
             Vector3 newPosition = Vector3.MoveTowards(transform.position, target.transform.position, step);
