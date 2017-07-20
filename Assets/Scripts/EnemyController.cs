@@ -13,13 +13,17 @@ public class EnemyController : MonoBehaviour {
     public float damage = 1.0f; // How much damage enemy does.
     public float speed = 1.0f; // In units per second.
     public float attackForce = 400.0f;
+    public float projectileLifeTime = 3.0f;
+    public float projectileSpeed = 10.0f;
+    public float projectileCoolDown = 1.0f;
     private PlayerController playerController;
     private float timeSinceLastProjectileFired = 0.0f;
     public int health = 5;
-    private int startingHealth = health;
+    private int startingHealth;
 
     private void Start() {
         playerController = target.GetComponent<PlayerController>();
+        startingHealth = health;
     }
 
     private void Update() {
@@ -37,7 +41,7 @@ public class EnemyController : MonoBehaviour {
             Vector3 newPosition = Vector3.MoveTowards(transform.position, target.transform.position, step);
             newPosition.y = transform.position.y;
             transform.position = newPosition;
-            if (Time.time - timeSinceLastProjectileFired > 1.0f) {
+            if (Time.time - timeSinceLastProjectileFired > projectileCoolDown) {
                 fireProjectile();
                 timeSinceLastProjectileFired = Time.time;
             }
@@ -57,8 +61,8 @@ public class EnemyController : MonoBehaviour {
         projectile.AddComponent<Rigidbody>();
         projectile.GetComponent<Rigidbody>().useGravity = false;
         projectile.GetComponent<Rigidbody>().isKinematic = false;
-        projectile.GetComponent<Rigidbody>().velocity = transform.forward * 10.0f;
-        Destroy(projectile, 3.0f);
+        projectile.GetComponent<Rigidbody>().velocity = transform.forward * projectileSpeed;
+        Destroy(projectile, projectileLifeTime);
    }
 
     /** Trigger on collision with enemy. */
