@@ -16,6 +16,9 @@ public class EnemyController : MonoBehaviour {
     public float projectileLifeTime = 3.0f;
     public float projectileSpeed = 10.0f;
     public float projectileCoolDown = 1.0f;
+    public int projectileCount = 1;
+    public float projectileAccuracy = 0.0f;
+    public bool fireRandomly = false;
     private PlayerController playerController;
     private float timeSinceLastProjectileFired = 0.0f;
     public int health = 5;
@@ -56,13 +59,25 @@ public class EnemyController : MonoBehaviour {
 
     void fireProjectile() {
         // Shoot projectile.
-        GameObject projectile = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), transform.position+transform.forward, Quaternion.identity) as GameObject;
-        projectile.tag = "player_damaging";
-        projectile.AddComponent<Rigidbody>();
-        projectile.GetComponent<Rigidbody>().useGravity = false;
-        projectile.GetComponent<Rigidbody>().isKinematic = false;
-        projectile.GetComponent<Rigidbody>().velocity = transform.forward * projectileSpeed;
-        Destroy(projectile, projectileLifeTime);
+        for(int i=0; i<projectileCount; i++) {
+            GameObject projectile = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), transform.position+transform.forward, Quaternion.identity) as GameObject;
+            projectile.tag = "player_damaging";
+            projectile.AddComponent<Rigidbody>();
+            projectile.GetComponent<Rigidbody>().useGravity = false;
+            projectile.GetComponent<Rigidbody>().mass = 0.001f;
+            projectile.GetComponent<Rigidbody>().isKinematic = false;
+            if (fireRandomly) {
+                float randomAngle = Random.Range ( 0, 2 * Mathf.PI );
+                projectile.GetComponent<Rigidbody>().velocity =   new Vector3(
+                        3.0f * Mathf.Cos( randomAngle ),
+                        3.0f * Mathf.Sin( randomAngle ),
+                        transform.forward.z
+             )* projectileSpeed;
+            } else {
+                projectile.GetComponent<Rigidbody>().velocity = transform.forward * projectileSpeed;
+            }
+            Destroy(projectile, projectileLifeTime);
+        }
    }
 
     /** Trigger on collision with enemy. */

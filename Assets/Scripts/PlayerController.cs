@@ -171,7 +171,7 @@ public class PlayerController : MonoBehaviour {
             forceDirection = -forceDirection.normalized;
 
             damagePlayer(3);
-            pushPlayer(forceDirection*1000.0f);
+            /* pushPlayer(forceDirection*1000.0f); */
 
             Destroy(collision.gameObject);
         }
