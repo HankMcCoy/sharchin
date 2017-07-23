@@ -8,7 +8,7 @@ using UnityStandardAssets.CrossPlatformInput;
   */
 public class WaterSpewer : MonoBehaviour {
     public Vector3 waterForce = new Vector3(10.0f, 0, 0);
-    private bool enabled = true;
+    public bool enabled = true;
 
     private void Update() {
        if (enabled &&transform.CompareTag("ice")) {
@@ -22,6 +22,7 @@ public class WaterSpewer : MonoBehaviour {
 
     /** Trigger on collision with enemy. */
     void OnTriggerStay (Collider collider) {
+        Debug.Log("--> " + collider.gameObject.tag);
         if(enabled && collider.gameObject.tag.Equals("Player")) {
           collider.gameObject.GetComponent<Rigidbody>().AddForce(waterForce);
         }

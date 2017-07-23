@@ -64,6 +64,11 @@ public class PlayerController : MonoBehaviour {
         m_Jump = CrossPlatformInputManager.GetButton("Jump");
         firePressed = CrossPlatformInputManager.GetButton("Fire1");
         temperatureGunPressed = CrossPlatformInputManager.GetButton("TemperatureGun");
+
+        if (transform.position.y <= -10.0f) {
+            transform.position = new Vector3(0,1.0f,0);
+            transform.GetComponent<Rigidbody>().velocity = new Vector3(0,0,0);
+        }
     }
 
     // Fixed update is called in sync with physics
