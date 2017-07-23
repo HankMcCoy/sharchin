@@ -7,8 +7,8 @@ using UnityEngine;
  */
 public class MovingPlatform : MonoBehaviour {
     public Vector3 initialDestination = new Vector3(0,0,1.0f);
-    private Vector3 destination;
     public float period = 3.0f;
+    private Vector3 destination;
     private Vector3 startPosition;
     private float speed;
 
