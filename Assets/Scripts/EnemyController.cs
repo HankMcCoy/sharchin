@@ -7,7 +7,6 @@ using UnityStandardAssets.CrossPlatformInput;
   * Basic Enemy AI behavior.  In the future we'll have different types of these.
   */
 public class EnemyController : MonoBehaviour {
-    public GameObject target; // Where the AI will try to go.
     public float aggroDistance = 5.0f;
     public float attackDistance = 1.0f; // How far away the AI can push you.
     public float damage = 1.0f; // How much damage enemy does.
@@ -23,8 +22,10 @@ public class EnemyController : MonoBehaviour {
     private float timeSinceLastProjectileFired = 0.0f;
     public int health = 5;
     private int startingHealth;
+    private GameObject target;
 
     private void Start() {
+        target = GameObject.FindGameObjectWithTag("Player");
         playerController = target.GetComponent<PlayerController>();
         startingHealth = health;
     }
