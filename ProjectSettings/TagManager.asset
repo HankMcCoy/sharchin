@@ -8,6 +8,7 @@ TagManager:
   - enemy_damaging
   - ice
   - water
+  - waterenemy
   layers:
   - Default
   - TransparentFX
