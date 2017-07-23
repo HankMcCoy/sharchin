@@ -117,23 +117,21 @@ public class PlayerController : MonoBehaviour {
     void handleTemperatureGun() {
         if (temperatureGunPressed && Time.time > nextTimeCanFire) {
             nextTimeCanFire = Time.time + cooldownFire;
-             Debug.DrawRay(transform.position, transform.forward, Color.green);
             if (temperatureGunPressed) {
                 RaycastHit objectHit;
-                /* bool hitSomething = Physics.Raycast (transform.position, transform.forward, out objectHit, 15.00f); */
-                bool hitSomething = Physics.Raycast (transform.position, new Vector3 (0, -1.0f, 0), out objectHit, 15.00f);
+                bool hitSomething = Physics.Raycast (transform.position, transform.forward, out objectHit, 15.00f);
                 if (hitSomething) {
                     if (objectHit.transform.CompareTag("ice")) {
                         objectHit.transform.tag = "water";
-                        objectHit.transform.gameObject.GetComponent<MeshRenderer>().enabled = false;
-                        objectHit.transform.gameObject.GetComponent<MeshCollider>().isTrigger = true;
+                        objectHit.transform.gameObject.GetComponent<Renderer>().enabled = false;
+                        objectHit.transform.gameObject.GetComponent<Collider>().isTrigger = true;
                         GameObject fireEffect = Instantiate(Resources.Load("Prefabs/HeatEffect"), transform.position+transform.forward, Quaternion.identity) as GameObject;
                         Destroy(fireEffect, 3.0f);
                     } else if (objectHit.transform.CompareTag("water")) {
                         // Ice to meet you
                         objectHit.transform.tag = "ice";
-                        objectHit.transform.gameObject.GetComponent<MeshRenderer>().enabled = true;
-                        objectHit.transform.gameObject.GetComponent<MeshCollider>().isTrigger = false;
+                        objectHit.transform.gameObject.GetComponent<Renderer>().enabled = true;
+                        objectHit.transform.gameObject.GetComponent<Collider>().isTrigger = false;
                         GameObject iceEffect = Instantiate(Resources.Load("Prefabs/IceEffect"), transform.position+transform.forward, Quaternion.identity) as GameObject;
                         Destroy(iceEffect, 3.0f);
                     }
@@ -192,7 +190,7 @@ public class PlayerController : MonoBehaviour {
 
     /** Trigger on collision with player. */
     void OnCollisionEnter (Collision collision) {
-        /* Console.log(col.gameObject.tag); */
+        Debug.Log(collision.gameObject.transform);
         if(collision.gameObject.tag.Equals("player_damaging")) {
             // Calculate Angle Between the collision point and the player
             Vector3 forceDirection = collision.contacts[0].point - transform.position;
@@ -202,6 +200,8 @@ public class PlayerController : MonoBehaviour {
             /* pushPlayer(forceDirection*1000.0f); */
 
             Destroy(collision.gameObject);
+        } else if (collision.gameObject.CompareTag("water")) {
+            Debug.Log("TESOUOHEUSTOEHUSO");
         }
     }
 }

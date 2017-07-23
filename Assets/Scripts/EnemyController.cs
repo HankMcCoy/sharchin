@@ -82,7 +82,6 @@ public class EnemyController : MonoBehaviour {
 
     /** Trigger on collision with enemy. */
     void OnCollisionEnter (Collision collision) {
-        /* Console.log(col.gameObject.tag); */
         if(collision.gameObject.tag.Equals("enemy_damaging")) {
             // Calculate Angle Between the collision point and the player
             Vector3 forceDirection = collision.contacts[0].point - transform.position;
