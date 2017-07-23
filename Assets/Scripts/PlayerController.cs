@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour {
     private Vector3 m_move;
     private bool m_Jump; // the world-relative desired move direction, calculated from the camForward and user input.
     private bool firePressed;
+    private bool temperatureGunPressed;
     private Rigidbody rigidBody;
     private PlayerAttributes playerAttributes = new PlayerAttributes();
     private float nextTimeCanFire = 0.0f;
@@ -62,6 +63,7 @@ public class PlayerController : MonoBehaviour {
     private void Update() {
         m_Jump = CrossPlatformInputManager.GetButton("Jump");
         firePressed = CrossPlatformInputManager.GetButton("Fire1");
+        temperatureGunPressed = CrossPlatformInputManager.GetButton("TemperatureGun");
     }
 
     // Fixed update is called in sync with physics
@@ -73,11 +75,9 @@ public class PlayerController : MonoBehaviour {
         float angle = Mathf.Atan2(v, h) * -180 / Mathf.PI + Camera.transform.eulerAngles.y + 90;
         float magnitude = Mathf.Sqrt(h*h + v*v);
 
-        Debug.Log("ANGLE");
-        Debug.Log(angle);
-
         handleJumping();
         handleFiring();
+        handleTemperatureGun();
 
         if (magnitude > 0.1) {
             transform.eulerAngles = new Vector3(0f, angle, 0f);
@@ -111,6 +111,34 @@ public class PlayerController : MonoBehaviour {
             projectile.GetComponent<Rigidbody>().isKinematic = false;
             projectile.GetComponent<Rigidbody>().velocity = transform.forward * 10.0f;
             Destroy(projectile, 5.0f);
+        }
+    }
+
+    void handleTemperatureGun() {
+        if (temperatureGunPressed && Time.time > nextTimeCanFire) {
+            nextTimeCanFire = Time.time + cooldownFire;
+             Debug.DrawRay(transform.position, transform.forward, Color.green);
+            if (temperatureGunPressed) {
+                RaycastHit objectHit;
+                /* bool hitSomething = Physics.Raycast (transform.position, transform.forward, out objectHit, 15.00f); */
+                bool hitSomething = Physics.Raycast (transform.position, new Vector3 (0, -1.0f, 0), out objectHit, 15.00f);
+                if (hitSomething) {
+                    if (objectHit.transform.CompareTag("ice")) {
+                        objectHit.transform.tag = "water";
+                        objectHit.transform.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                        objectHit.transform.gameObject.GetComponent<MeshCollider>().isTrigger = true;
+                        GameObject fireEffect = Instantiate(Resources.Load("Prefabs/HeatEffect"), transform.position+transform.forward, Quaternion.identity) as GameObject;
+                        Destroy(fireEffect, 3.0f);
+                    } else if (objectHit.transform.CompareTag("water")) {
+                        // Ice to meet you
+                        objectHit.transform.tag = "ice";
+                        objectHit.transform.gameObject.GetComponent<MeshRenderer>().enabled = true;
+                        objectHit.transform.gameObject.GetComponent<MeshCollider>().isTrigger = false;
+                        GameObject iceEffect = Instantiate(Resources.Load("Prefabs/IceEffect"), transform.position+transform.forward, Quaternion.identity) as GameObject;
+                        Destroy(iceEffect, 3.0f);
+                    }
+                }
+            }
         }
     }
 

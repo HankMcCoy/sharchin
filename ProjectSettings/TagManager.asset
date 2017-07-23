@@ -6,6 +6,8 @@ TagManager:
   tags:
   - player_damaging
   - enemy_damaging
+  - ice
+  - water
   layers:
   - Default
   - TransparentFX
